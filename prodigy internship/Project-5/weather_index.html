@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+
+    <!-- CSS Styling -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        input {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #2ecc71;
+        }
+
+        .weather-info {
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Weather App</h2>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <button onclick="getLocation()">Use My Location</button>
+
+        <div class="weather-info" id="weather-info"></div>
+        <div class="error" id="error-message"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const apiKey = "YOUR_API_KEY";
+
+        function getWeather() {
+            const city = document.getElementById("city").value;
+            if (city === "") {
+                document.getElementById("error-message").innerText = "Please enter a city name.";
+                return;
+            }
+            fetchWeather("https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric");
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetchWeather("https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric");
+                }, error => {
+                    document.getElementById("error-message").innerText = "Location access denied.";
+                });
+            } else {
+                document.getElementById("error-message").innerText = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function fetchWeather(url) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === 200) {
+                        document.getElementById("weather-info").innerHTML = `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <h3>${data.name}, ${data.sys.country}</h3>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <p>Temperature: ${data.main.temp}°C</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>Weather: ${data.weather[0].description}</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>Humidity: ${data.main.humidity}%</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <p>Wind Speed: ${data.wind.speed} m/s</p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `;
+                        document.getElementById("error-message").innerText = "";
+                    } else {
+                        document.getElementById("error-message").innerText = "City not found.";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("error-message").innerText = "Failed to fetch weather data.";
+                });
+        }
+    </script>
+
+</body>
+
+</html>
