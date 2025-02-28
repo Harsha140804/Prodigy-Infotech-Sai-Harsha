@@ -81,10 +81,10 @@
 
       function getWeather() {
         const city = document.getElementById("city").value;
-        // if (city === "") {
-        //     document.getElementById("error-message").innerText = "Please enter a city name.";
-        //     return;
-        // }
+        if (city === "") {
+            document.getElementById("error-message").innerText = "Please enter a city name.";
+            return;
+        }
         fetchWeather(
           `http://api.weatherapi.com/v1/current.json?key=7757114af35e466ba0162457251902&q=${city}&aqi=no`
         );
